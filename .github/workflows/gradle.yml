@@ -1,4 +1,4 @@
-name: CD with Gradle
+name: docker - github action - ec2
 
 # 언제 이 파일의 내용이 실행될 것인지 정의합니다. 
 # 여기서는 main 브랜치에 코드가 push 되거나 pull_request되었을 때 실행할 것을 의미
@@ -44,6 +44,7 @@ jobs:
        # 이 때 사용되는 ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring 가 위에서 만든 도커 repository 입니다.
       - name: Docker build & push to docker repo
         run: |
+          sudo chmod 666 /var/run/docker.sock # permission denied 문제 해결 명령어
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring .
           docker push ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring
