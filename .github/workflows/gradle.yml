@@ -29,7 +29,7 @@ jobs:
       # Github secrets로부터 데이터를 받아서, 워크 플로우에 파일을 생성
       - name: Make application.properties
         run: |
-          mkdir ./src/main/resources
+          mkdir ./src/main/resources # application.properties파일을 만든적이 없어서 경로가 없기 때문에 만들어주기.
           cd ./src/main/resources
           touch ./application.properties
           echo "${{ secrets.PROPERTIES }}" > ./application.properties
@@ -55,9 +55,9 @@ jobs:
         uses: appleboy/ssh-action@master
         id: deploy
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
           username: ubuntu
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.KEY }} # pem파일 cat 명령어로 내용확인해서 %빼고 전부 복사붙여넣기.
           envs: GITHUB_SHA
           script: |
             sudo docker rm -f $(docker ps -qa)
