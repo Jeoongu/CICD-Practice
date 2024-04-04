@@ -62,7 +62,7 @@ jobs:
           envs: GITHUB_SHA
           script: |
             sudo chmod +x /usr/local/bin/docker-compose # docker-compose 권한
-            sudo docker rm -f $(sudo docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring
+            docker rm -f $(docker ps -qa)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring
             docker-compose up -d
             docker image prune -f
