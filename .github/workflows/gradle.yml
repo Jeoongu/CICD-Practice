@@ -60,6 +60,7 @@ jobs:
           key: ${{ secrets.KEY }} # pem파일 cat 명령어로 내용확인해서 %빼고 전부 복사붙여넣기.
           envs: GITHUB_SHA
           script: |
+            sudo chmod +x /usr/local/bin/docker-compose # docker-compose 권한
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring
             docker-compose up -d
