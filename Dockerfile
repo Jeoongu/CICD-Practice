@@ -13,7 +13,7 @@ ARG JAR_FILE=build/libs/*.jar
 # or Maven
 # ARG JAR_FILE_PATH=target/*.jar
 
-COPY ${JAR_FILE} /app.jar
+COPY ${JAR_FILE} /app.jar1
 
 #EXPOSE 8080
 
