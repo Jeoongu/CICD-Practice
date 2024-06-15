@@ -44,10 +44,21 @@ jobs:
        # 이 때 사용되는 ${{ secrets.DOCKER_USERNAME }}/docker-githubaction-spring 가 위에서 만든 도커 repository 입니다.
       - name: Docker build & push to docker repo
         run: |
-          sudo chmod 666 /var/run/docker.sock # permission denied 문제 해결 명령어
+          sudo chmod 666 /var/run/docker.sock 
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/kakao-test .
           docker push ${{ secrets.DOCKER_USERNAME }}/kakao-test
+
+       # docker-compose.yml 파일을 EC2 development server로 전달
+      - name: Send docker-compose.yml
+        uses: appleboy/scp-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          source: "./docker-compose.yml"
+          target: "/home/ubuntu/"
 
        # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
        # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행하는 것입니다. 
@@ -61,7 +72,6 @@ jobs:
           key: ${{ secrets.KEY }} # pem파일 cat 명령어로 내용확인해서 %빼고 전부 복사붙여넣기.
           envs: GITHUB_SHA
           script: |
-            sudo chmod +x /usr/local/bin/docker-compose # docker-compose 권한
             docker rm -f $(docker ps -qa)
             docker pull ${{ secrets.DOCKER_USERNAME }}/kakao-test
             docker-compose up -d
