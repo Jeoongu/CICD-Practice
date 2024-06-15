@@ -87,6 +87,10 @@ public class OAuthService {
         responseDto.setNickName(userInfo.kakaoAccount.profile.getNickName());
         responseDto.setProfileImageUrl(userInfo.kakaoAccount.profile.getProfileImageUrl());
 
+        log.info("id : " +userInfo.getId());
+        log.info("NickName : "+userInfo.kakaoAccount.profile.getNickName());
+        log.info("URL : "+userInfo.kakaoAccount.profile.getProfileImageUrl());
+
         return responseDto;
     }
 }
